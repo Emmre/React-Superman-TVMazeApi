@@ -1,0 +1,30 @@
+.cardImage {
+  max-height: 370px;
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: bold;
+  height: 36px;
+}
+
+.cardText {
+  max-height: 215px;
+  min-height: 215px;
+  overflow: hidden;
+}
+
+.cardLink {
+  display: block;
+  color: #d7dddb;
+  text-decoration: none;
+  border-radius: 4px;
+  background-color: tomato;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.cardLink:hover {
+  color: snow;
+  text-decoration: none;
+}
