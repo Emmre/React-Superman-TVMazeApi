@@ -33,7 +33,7 @@ export default class Home extends Component {
         <div className="container">
           <div className="row">
             {movie.map((item) => (
-              <div className="col-3 mt-5" key={Math.random()}>
+              <div className="col-lg-3 col-sm-12 col-md-6 col-xs-12 mt-5" key={Math.random()}>
                 <Cards item={item} />
               </div>
             ))}
