@@ -20,7 +20,7 @@ export default class Detail extends Component {
     const { data } = await axios.get(`http://api.tvmaze.com/shows/${id}`);
     this.setState({ supermanItem: data });
 
-    const image = this.state.supermanItem.image.original;
+    const image = this.state.supermanItem.image?.original || 'https://source.unsplash.com/random/230x338';
     this.setState({ image: image });
 
     const summary = this.state.supermanItem.summary.replace(/<.*?>/gm, "");
