@@ -17,8 +17,12 @@ const Cards = ({ item }) => {
         />
         <Card.Body>
           <Card.Title className={s.cardTitle}>{item.show.name}</Card.Title>
-          <Card.Text className={s.cardText}>{item.show.summary?.replace(/<.*?>/gm, "")}</Card.Text>
-          <a className={s.cardLink} href={`/detail/${item.show.id}`}>Detay</a>
+          <Card.Text className={s.cardText}>
+            {item.show.summary?.replace(/<.*?>/gm, "")}
+          </Card.Text>
+          <a className={s.cardLink} href={`/detail/${item.show.id}`}>
+            Detay
+          </a>
         </Card.Body>
       </Card>
     </>

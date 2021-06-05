@@ -1,45 +1,46 @@
-import React, { Component } from "react";
-import DocumentMeta from "react-document-meta";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getItemList } from "../store/actions";
+import Helmet from "react-helmet";
 import Cards from "./Card/Card";
 
-export default class Home extends Component {
-  state = {
-    movie: [],
-  };
-  componentDidMount() {
-    axios
-      .get("http://api.tvmaze.com/search/shows?q=superman")
-      .then((result) => {
-        const movie = result.data;
-        this.setState({ movie });
-      });
-  }
-  render() {
-    const meta = {
-      title: "Superman TVMaze API",
-      description: "Superman movies with TVMaze API",
-      canonical: `${window.location.href}`,
-      meta: {
-        charset: "utf-8",
-        name: {
-          keywords: "Superman,TV,Movies,Batman",
-        },
-      },
+const Home = () => {
+  const item = useSelector((state) => state.List);
+  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (data.length == 0 && item) {
+        await dispatch(getItemList());
+        return setData(item);
+      }
     };
-    const { movie } = this.state;
-    return (
-      <DocumentMeta {...meta}>
-        <div className="container">
-          <div className="row">
-            {movie.map((item) => (
-              <div className="col-lg-3 col-sm-12 col-md-6 col-xs-12 mt-5" key={Math.random()}>
-                <Cards item={item} />
-              </div>
-            ))}
-          </div>
+
+    fetchData();
+  });
+
+  return (
+    <>
+      //Fix
+      <Helmet>
+        <title>Superman TVMaze API</title>
+        <meta name="description" content="Superman movies with TVMaze API" />
+      </Helmet>
+      <div className="container">
+        <div className="row">
+          {data.map((item) => (
+            <div
+              className="col-lg-3 col-sm-12 col-md-6 col-xs-12 mt-5"
+              key={Math.random()}
+            >
+              <Cards item={item} />
+            </div>
+          ))}
         </div>
-      </DocumentMeta>
-    );
-  }
-}
+      </div>
+    </>
+  );
+};
+
+export default Home;

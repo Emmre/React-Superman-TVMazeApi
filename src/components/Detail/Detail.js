@@ -1,64 +1,51 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { Card } from "react-bootstrap";
-import DocumentMeta from "react-document-meta";
+import React, { useEffect, useState } from "react";
 import s from "./Detail.module.css";
+import { Card } from "react-bootstrap";
+import axios from "axios";
+import { withRouter } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
-export default class Detail extends Component {
-  state = {
-    supermanItem: [],
-    image: "",
-    summary: "",
-    name: "",
-  };
+const Detail = ({ match }) => {
+  const [item, setItem] = useState([]);
 
-  //ES6 async await
-
-  async componentDidMount() {
-    const id = this.props.match.params.id;
-
+  const getItem = async () => {
+    const id = match.params.id;
     const { data } = await axios.get(`http://api.tvmaze.com/shows/${id}`);
-    this.setState({ supermanItem: data });
-
-    const image = this.state.supermanItem.image?.original || 'https://source.unsplash.com/random/230x338';
-    this.setState({ image: image });
-
-    const summary = this.state.supermanItem.summary.replace(/<.*?>/gm, "");
-    this.setState({ summary: summary });
-
-    const name = this.state.supermanItem.name;
-    this.setState({ name: name });
+    setItem(data);
+  };
+  if (item.length == 0) {
+    getItem();
   }
+  const { image, name, summary } = item;
 
-  render() {
-    const { image, summary, name } = this.state;
-    const meta = {
-      title: `${name}'s Detail Page `,
-      description: `${summary}`,
-      canonical: `${window.location.href}`,
-      meta: {
-        charset: "utf-8",
-        name: {
-          keywords: "Superman,TV,Movies,Batman",
-        },
-      },
-    };
-    return (
-      <DocumentMeta {...meta}>
-        <div className="container mt-5">
-          <div className="row">
-            <Card style={{ width: "100%" }}>
-              <div className={s.Wrapper}>
-                <Card.Img className={s.cardImage} src={image} />
-                <Card.Body>
-                  <Card.Title>{name}</Card.Title>
-                  <Card.Text>{summary}</Card.Text>
-                </Card.Body>
-              </div>
-            </Card>
-          </div>
+  return (
+    <>
+      //Fix
+      <Helmet>
+        <title>{`${name}`}'s Detail Page</title>
+        <meta name="description" content={summary} />
+      </Helmet>
+      <div className="container mt-5">
+        <div className="row">
+          <Card style={{ width: "100%" }}>
+            <div className={s.Wrapper}>
+              <Card.Img
+                className={s.cardImage}
+                src={
+                  image?.original ||
+                  "https://source.unsplash.com/random/230x338"
+                }
+              />
+              <Card.Body>
+                <Card.Title>{name}</Card.Title>
+                <Card.Text>{summary?.replace(/<.*?>/gm, "")}</Card.Text>
+              </Card.Body>
+            </div>
+          </Card>
         </div>
-      </DocumentMeta>
-    );
-  }
-}
+      </div>
+    </>
+  );
+};
+
+export default withRouter(Detail);
